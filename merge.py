@@ -1,6 +1,6 @@
-import re
 import urllib.request
 
+# 剔除掉会报资源404的失效模块（如wloc），保留稳定去广告源
 PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/DragonRead_remove_ads.lpx",
     "https://ddgksf2013.top/module/ScriptHub.Loon.plugin",
@@ -19,8 +19,6 @@ PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/QuickSearch.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Node_detection_tool.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx",
-    "https://raw.githubusercontent.com/ttyyss2233/Tool/main/shadowrocket/mokuai/Apns.module",
-    "https://raw.githubusercontent.com/bh0sec/wloc/main/modules/wloc.lpx",
 ]
 
 headers = {
@@ -56,7 +54,7 @@ for url in PLUGIN_URLS:
         elif current_section in ["Rule", "Rewrite", "Script"]:
           sections[current_section].add(line)
   except Exception as e:
-    print(f"跳过错误链接: {url} -> {e}")
+    print(f"跳过失效源: {url} -> {e}")
 
 with open("all_in_one.plugin", "w", encoding="utf-8") as f:
   f.write(
@@ -72,4 +70,5 @@ with open("all_in_one.plugin", "w", encoding="utf-8") as f:
   if sections["Hostnames"]:
     f.write("[Mitm]\n")
     f.write(f"hostname = {', '.join(sorted(sections['Hostnames']))}\n")
+
 print("Done!")
