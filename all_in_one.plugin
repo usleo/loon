@@ -3,21 +3,3 @@
 #!author = AutoBuild
 #!system = iOS
 
-[Rule]
-DOMAIN-KEYWORD,apple.com.edgekey.net,PROXY
-DOMAIN-SUFFIX,akadns.net,PROXY
-DOMAIN-SUFFIX,push.apple.com,PROXY
-IP-CIDR,17.188.128.0/18,PROXY,no-resolve
-IP-CIDR,17.188.20.0/23,PROXY,no-resolve
-IP-CIDR,17.249.0.0/16,PROXY,no-resolve
-IP-CIDR,17.252.0.0/16,PROXY,no-resolve
-IP-CIDR,17.57.144.0/22,PROXY,no-resolve
-IP-CIDR6,2403:300:a42::/48,PROXY,no-resolve
-IP-CIDR6,2403:300:a51::/48,PROXY,no-resolve
-IP-CIDR6,2620:149:a44::/48,PROXY,no-resolve
-IP-CIDR6,2a01:b740:a42::/48,PROXY,no-resolve
-
-[Script]
-http-request ^https?:\/\/gs-loc(-cn)?\.apple\.com\/wloc-settings\/save script-path=https://raw.githubusercontent.com/BH0sec/wloc/refs/heads/main/dist/wloc-settings.js, timeout=10, tag=WLOC Settings
-http-response ^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc script-path=https://raw.githubusercontent.com/BH0sec/wloc/refs/heads/main/dist/wloc.js, requires-body=true, binary-body-mode=true, timeout=30, tag=Apple WLOC, argument=[{longitude},{latitude},{accuracy},{randomRadius},{logLevel}]
-
