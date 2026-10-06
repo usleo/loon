@@ -16,6 +16,8 @@ PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/PinDuoDuo_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx",
+    "https://kelee.one/Tool/Loon/Lpx/Twitter_remove_ads.lpx",
+    https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Twitter.conf
 ]
 
 headers = {
