@@ -1,9 +1,8 @@
 import urllib.request
 
-# 剔除掉会报资源404的失效模块（如wloc），保留稳定去广告源
+# 汇聚最核心的去广告分流与静态规则，不引入脆弱的动态外部脚本
 PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/DragonRead_remove_ads.lpx",
-    "https://ddgksf2013.top/module/ScriptHub.Loon.plugin",
     "https://kelee.one/Tool/Loon/Lpx/Weixin_external_links_unlock.lpx",
     "https://kelee.one/Tool/Loon/Lpx/JDWaimai_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/JD_remove_ads.lpx",
@@ -16,8 +15,6 @@ PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/Weixin_Official_Accounts_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/PinDuoDuo_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx",
-    "https://kelee.one/Tool/Loon/Lpx/QuickSearch.lpx",
-    "https://kelee.one/Tool/Loon/Lpx/Node_detection_tool.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx",
 ]
 
@@ -26,7 +23,7 @@ headers = {
         "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) Loon/3.2.0"
     )
 }
-sections = {"Rule": set(), "Rewrite": set(), "Script": set(), "Hostnames": set()}
+sections = {"Rule": set(), "Rewrite": set(), "Hostnames": set()}
 current_section = None
 
 for url in PLUGIN_URLS:
@@ -41,7 +38,7 @@ for url in PLUGIN_URLS:
         if line.startswith("[") and line.endswith("]"):
           tag = line[1:-1].strip()
           current_section = (
-              tag if tag in ["Rule", "Rewrite", "Script", "Mitm"] else None
+              tag if tag in ["Rule", "Rewrite", "Mitm"] else None
           )
           continue
         if current_section == "Mitm" and "hostname" in line:
@@ -51,17 +48,19 @@ for url in PLUGIN_URLS:
               clean_h = h.strip()
               if clean_h:
                 sections["Hostnames"].add(clean_h)
-        elif current_section in ["Rule", "Rewrite", "Script"]:
-          sections[current_section].add(line)
+        elif current_section in ["Rule", "Rewrite"]:
+          # 如果包含需远程拉取的 script-path 资源直接跳过，防止资源 404
+          if "script-path" not in line:
+            sections[current_section].add(line)
   except Exception as e:
-    print(f"跳过失效源: {url} -> {e}")
+    print(f"跳过: {url} -> {e}")
 
 with open("all_in_one.plugin", "w", encoding="utf-8") as f:
   f.write(
-      "#!name = 聚合去广告插件包\n#!desc = 每日自动构建\n#!author = AutoBuild\n#!system"
+      "#!name = 聚合去广告纯净版\n#!desc = 零外部依赖无报错\n#!author = AutoBuild\n#!system"
       " = iOS\n\n"
   )
-  for sec in ["Rule", "Rewrite", "Script"]:
+  for sec in ["Rule", "Rewrite"]:
     if sections[sec]:
       f.write(f"[{sec}]\n")
       for item in sorted(sections[sec]):
