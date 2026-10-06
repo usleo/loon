@@ -1,7 +1,7 @@
 import urllib.request
 
-# 汇聚最核心的去广告分流与静态规则，不引入脆弱的动态外部脚本
 PLUGIN_URLS = [
+    # 核心去广告与净化
     "https://kelee.one/Tool/Loon/Lpx/DragonRead_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Weixin_external_links_unlock.lpx",
     "https://kelee.one/Tool/Loon/Lpx/JDWaimai_remove_ads.lpx",
@@ -16,8 +16,8 @@ PLUGIN_URLS = [
     "https://kelee.one/Tool/Loon/Lpx/PinDuoDuo_remove_ads.lpx",
     "https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx",
     "https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx",
+    # X (Twitter) 净化模块
     "https://kelee.one/Tool/Loon/Lpx/Twitter_remove_ads.lpx",
-    https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Twitter.conf
 ]
 
 headers = {
@@ -51,16 +51,15 @@ for url in PLUGIN_URLS:
               if clean_h:
                 sections["Hostnames"].add(clean_h)
         elif current_section in ["Rule", "Rewrite"]:
-          # 如果包含需远程拉取的 script-path 资源直接跳过，防止资源 404
           if "script-path" not in line:
             sections[current_section].add(line)
   except Exception as e:
-    print(f"跳过: {url} -> {e}")
+    print(f"跳过源: {url} -> {e}")
 
 with open("all_in_one.plugin", "w", encoding="utf-8") as f:
   f.write(
-      "#!name = 聚合去广告纯净版\n#!desc = 零外部依赖无报错\n#!author = AutoBuild\n#!system"
-      " = iOS\n\n"
+      "#!name = 聚合去广告纯净版\n#!desc = 含Twitter去广告与主流净化\n#!author ="
+      " AutoBuild\n#!system = iOS\n\n"
   )
   for sec in ["Rule", "Rewrite"]:
     if sections[sec]:
